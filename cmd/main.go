@@ -1,0 +1,85 @@
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/hanymamdouh82/contctrl/internal/navigator"
+	"github.com/hanymamdouh82/contctrl/internal/selector"
+	"github.com/hanymamdouh82/contctrl/internal/ui"
+)
+
+const (
+	BASE_DIR = "/mnt/repos/containerization"
+)
+
+func main() {
+	if len(os.Args) < 2 {
+		usage()
+		os.Exit(1)
+	}
+
+	// build projects catalog
+	ps := navigator.Projects(BASE_DIR)
+	project := selector.SelectProject(ps)
+	ui.Confirm("Project", project.Name)
+
+	// We check files associated to project.
+	// If more than one file, there is no default and we open select file
+	// If only one file we assume it is the default file and use it as Activ File
+	if len(project.Files) > 1 {
+		selector.SelectFile(&project)
+		ui.Confirm("File", project.GetActiveFile().Name)
+	} else {
+		project.ActiveFile(0)
+	}
+
+	switch os.Args[1] {
+	case "run":
+		up(&project)
+	case "stop":
+		stop(&project)
+	case "pull":
+		pull(&project)
+	default:
+		usage()
+		os.Exit(1)
+	}
+}
+
+func up(prj *navigator.Project) {
+	selector.SelectStack(prj)
+	ui.Confirm("Stack", prj.SelectedStack.Name)
+	ui.Section("docker output")
+
+	if err := prj.RunActiveStack(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func stop(prj *navigator.Project) {
+	ui.Section("docker output")
+	if err := prj.StopProject(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func pull(prj *navigator.Project) {
+	selector.SelectStack(prj)
+	ui.Confirm("Stack", prj.SelectedStack.Name)
+	ui.Section("docker output")
+	if err := prj.PullStack(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func usage() {
+	fmt.Println(`contctrl - Containerization Control Plane
+
+Usage:
+  contctrl run      Run stack services
+  contctrl stop     Stop compose services
+  contctrl restart  Restart a specific service
+  contctrl pull     Pull and restart a specific service`)
+}

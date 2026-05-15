@@ -1,0 +1,7 @@
+mysql:
+  - mysql
+
+dev:
+  - mysql
+  - nats
+

@@ -1,0 +1,24 @@
+# Binary
+contctrl
+
+# Go build cache
+*.o
+*.a
+*.so
+
+# Test cache
+*.test
+*.out
+
+# Module download cache
+vendor/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
