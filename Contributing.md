@@ -62,6 +62,16 @@ Open a GitHub issue with:
 - What actually happened
 - Your OS, Go version, and Docker version
 
+## Updating the demo GIF
+
+The demo is recorded using [vhs](https://github.com/charmbracelet/vhs).
+
+Install vhs, then run:
+
+```sh
+vhs docs/demo.tape
+```
+
 ## Questions
 
 Open a GitHub issue with the `question` label.
