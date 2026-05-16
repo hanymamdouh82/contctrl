@@ -2,15 +2,10 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Go version](https://img.shields.io/badge/go-1.26+-00ADD8.svg)](https://golang.org)
- 
+
 A minimal, keyboard-driven control plane for managing Docker Compose projects at scale.
- 
+
 ![demo](docs/demo.gif)
- 
-## Why
- 
-When you have dozens of Compose projects spread across a directory tree, jumping between them with plain shell commands becomes tedious. `contctrl` builds a catalog of all your projects and lets you navigate, select, and act on them through fuzzy finding — no typing full paths or service names.
- 
 
 ## Why
 
