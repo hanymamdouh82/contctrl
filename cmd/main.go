@@ -14,7 +14,6 @@ import (
 func main() {
 	// load config
 	// If doesn't exist, config package will create it
-	// To-Do: Add to help / cli help
 	c, err := config.Load()
 	if err != nil {
 		log.Fatal(err)
@@ -27,6 +26,34 @@ func main() {
 
 	// build projects catalog
 	ps := catalog.Projects(&c)
+
+	switch os.Args[1] {
+	case "run":
+		prj := prepProject(ps)
+		run(prj)
+	case "stop":
+		prj := prepProject(ps)
+		stop(prj)
+	case "pull":
+		prj := prepProject(ps)
+		pull(prj)
+	case "restart":
+		prj := prepProject(ps)
+		restart(prj)
+	case "edit":
+		prj := prepProject(ps)
+		editCompose(prj)
+	case "config":
+		editConfig(&c)
+	default:
+		usage()
+		os.Exit(1)
+	}
+}
+
+// Opens fuzzy selection for projct and set default project file
+// Invoke this function for commands that requires project selections
+func prepProject(ps []catalog.Project) *catalog.Project {
 	project, err := selector.SelectProject(ps)
 	if err != nil {
 		log.Fatal(err)
@@ -45,21 +72,10 @@ func main() {
 		project.ActiveFile(0)
 	}
 
-	switch os.Args[1] {
-	case "run":
-		run(&project)
-	case "stop":
-		stop(&project)
-	case "pull":
-		pull(&project)
-	case "restart":
-		restart(&project)
-	default:
-		usage()
-		os.Exit(1)
-	}
+	return &project
 }
 
+// Command: run
 func run(prj *catalog.Project) {
 	if err := selector.SelectStack(prj); err != nil {
 		log.Fatal(err)
@@ -72,6 +88,7 @@ func run(prj *catalog.Project) {
 	}
 }
 
+// Command: stop
 func stop(prj *catalog.Project) {
 	ui.Section("docker output")
 	if err := prj.StopProject(); err != nil {
@@ -79,6 +96,7 @@ func stop(prj *catalog.Project) {
 	}
 }
 
+// Command: pull
 func pull(prj *catalog.Project) {
 	if err := selector.SelectStack(prj); err != nil {
 		log.Fatal(err)
@@ -90,6 +108,7 @@ func pull(prj *catalog.Project) {
 	}
 }
 
+// Command: restart
 func restart(prj *catalog.Project) {
 	if err := selector.SelectStack(prj); err != nil {
 		log.Fatal(err)
@@ -101,6 +120,21 @@ func restart(prj *catalog.Project) {
 	}
 }
 
+// Command: edit
+func editCompose(prj *catalog.Project) {
+	if err := prj.Edit(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+// Command: config
+func editConfig(c *config.Config) {
+	if err := c.Edit(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+// Prints CLI usage commands and verbs
 func usage() {
 	fmt.Println(`contctrl - Containerization Control Plane
 
@@ -108,5 +142,7 @@ Usage:
   contctrl run      Run stack services
   contctrl stop     Stop compose services
   contctrl restart  Restart a specific stack
-  contctrl pull     Pull and restart a specific service`)
+  contctrl pull     Pull and restart a specific service
+  contctrl edit     Edit a project compose file
+  contctrl config   Edit contctrl config file`)
 }

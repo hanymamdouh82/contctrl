@@ -62,6 +62,11 @@ func (p *Project) RestartStack() error {
 	return err
 }
 
+func (p *Project) Edit() error {
+	err := runner.Edit(p.SelectedFile.AbsPath)
+	return err
+}
+
 // For debugging and logging only
 func (p *Project) Describe() {
 	fmt.Printf("Project Name: %s\n", p.Name)
