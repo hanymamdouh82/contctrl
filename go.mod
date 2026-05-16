@@ -5,7 +5,7 @@ go 1.26.3
 require (
 	github.com/fatih/color v1.19.0
 	github.com/ktr0731/go-fuzzyfinder v0.9.0
-	gopkg.in/yaml.v2 v2.4.0
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (

@@ -3,14 +3,13 @@ package selector
 import (
 	"bytes"
 	"fmt"
-	"log"
 
-	"github.com/hanymamdouh82/contctrl/internal/navigator"
+	"github.com/hanymamdouh82/contctrl/internal/catalog"
 	"github.com/ktr0731/go-fuzzyfinder"
 )
 
 // Fuzzy find select project
-func SelectProject(prjs []navigator.Project) navigator.Project {
+func SelectProject(prjs []catalog.Project) (catalog.Project, error) {
 
 	idx, err := fuzzyfinder.Find(prjs,
 		func(i int) string {
@@ -24,16 +23,16 @@ func SelectProject(prjs []navigator.Project) navigator.Project {
 		}))
 
 	if err != nil {
-		log.Fatal(err)
+		return catalog.Project{}, err
 	}
 
 	project := prjs[idx]
 
-	return project
+	return project, nil
 }
 
 // Fuzzy find select file
-func SelectFile(prj *navigator.Project) {
+func SelectFile(prj *catalog.Project) error {
 	fidx, err := fuzzyfinder.Find(prj.Files,
 		func(i int) string {
 			return prj.Files[i].Name
@@ -50,15 +49,16 @@ func SelectFile(prj *navigator.Project) {
 		}))
 
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	prj.ActiveFile(fidx)
 
+	return nil
 }
 
 // Fuzzy find select stack
-func SelectStack(prj *navigator.Project) {
+func SelectStack(prj *catalog.Project) error {
 
 	idx, err := fuzzyfinder.Find(prj.Metadata.Stacks,
 		func(i int) string {
@@ -76,8 +76,9 @@ func SelectStack(prj *navigator.Project) {
 		}))
 
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	prj.ActiveStack(idx)
+	return nil
 }

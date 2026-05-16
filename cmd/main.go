@@ -5,31 +5,41 @@ import (
 	"log"
 	"os"
 
-	"github.com/hanymamdouh82/contctrl/internal/navigator"
+	"github.com/hanymamdouh82/contctrl/internal/catalog"
+	"github.com/hanymamdouh82/contctrl/internal/config"
 	"github.com/hanymamdouh82/contctrl/internal/selector"
 	"github.com/hanymamdouh82/contctrl/internal/ui"
 )
 
-const (
-	BASE_DIR = "/mnt/repos/containerization"
-)
-
 func main() {
+	// load config
+	// If doesn't exist, config package will create it
+	// To-Do: Add to help / cli help
+	c, err := config.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	if len(os.Args) < 2 {
 		usage()
 		os.Exit(1)
 	}
 
 	// build projects catalog
-	ps := navigator.Projects(BASE_DIR)
-	project := selector.SelectProject(ps)
+	ps := catalog.Projects(&c)
+	project, err := selector.SelectProject(ps)
+	if err != nil {
+		log.Fatal(err)
+	}
 	ui.Confirm("Project", project.Name)
 
 	// We check files associated to project.
 	// If more than one file, there is no default and we open select file
 	// If only one file we assume it is the default file and use it as Activ File
 	if len(project.Files) > 1 {
-		selector.SelectFile(&project)
+		if err := selector.SelectFile(&project); err != nil {
+			log.Fatal(err)
+		}
 		ui.Confirm("File", project.GetActiveFile().Name)
 	} else {
 		project.ActiveFile(0)
@@ -37,7 +47,7 @@ func main() {
 
 	switch os.Args[1] {
 	case "run":
-		up(&project)
+		run(&project)
 	case "stop":
 		stop(&project)
 	case "pull":
@@ -48,8 +58,10 @@ func main() {
 	}
 }
 
-func up(prj *navigator.Project) {
-	selector.SelectStack(prj)
+func run(prj *catalog.Project) {
+	if err := selector.SelectStack(prj); err != nil {
+		log.Fatal(err)
+	}
 	ui.Confirm("Stack", prj.SelectedStack.Name)
 	ui.Section("docker output")
 
@@ -58,15 +70,17 @@ func up(prj *navigator.Project) {
 	}
 }
 
-func stop(prj *navigator.Project) {
+func stop(prj *catalog.Project) {
 	ui.Section("docker output")
 	if err := prj.StopProject(); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func pull(prj *navigator.Project) {
-	selector.SelectStack(prj)
+func pull(prj *catalog.Project) {
+	if err := selector.SelectStack(prj); err != nil {
+		log.Fatal(err)
+	}
 	ui.Confirm("Stack", prj.SelectedStack.Name)
 	ui.Section("docker output")
 	if err := prj.PullStack(); err != nil {

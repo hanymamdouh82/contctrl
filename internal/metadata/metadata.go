@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 type Stack struct {
@@ -26,7 +26,8 @@ func Load(filePath string) (Metadata, error) {
 
 	var p map[string][]string
 	if err := yaml.Unmarshal(b, &p); err != nil {
-		log.Fatal(err)
+		log.Printf("%s is not in correct yml structure, file ignored\n", filePath)
+		return Metadata{}, err
 	}
 
 	if len(p) == 0 {

@@ -1,10 +1,9 @@
 package parser
 
 import (
-	"log"
 	"os"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 type ServiceCatalog struct {
@@ -26,16 +25,13 @@ func Parse(filePath string) ([]ServiceCatalog, error) {
 
 	b, err := os.ReadFile(filePath)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	var ss DockerComposeYaml
 	if err := yaml.Unmarshal(b, &ss); err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-
-	// j, _ := json.MarshalIndent(ss, "", "  ")
-	// fmt.Printf("%s\n", j)
 
 	ctlg := make([]ServiceCatalog, 0)
 	for k, v := range ss.Services {
