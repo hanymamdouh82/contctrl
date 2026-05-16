@@ -52,6 +52,8 @@ func main() {
 		stop(&project)
 	case "pull":
 		pull(&project)
+	case "restart":
+		restart(&project)
 	default:
 		usage()
 		os.Exit(1)
@@ -88,12 +90,23 @@ func pull(prj *catalog.Project) {
 	}
 }
 
+func restart(prj *catalog.Project) {
+	if err := selector.SelectStack(prj); err != nil {
+		log.Fatal(err)
+	}
+	ui.Confirm("Stack", prj.SelectedStack.Name)
+	ui.Section("docker output")
+	if err := prj.RestartStack(); err != nil {
+		log.Fatal(err)
+	}
+}
+
 func usage() {
 	fmt.Println(`contctrl - Containerization Control Plane
 
 Usage:
   contctrl run      Run stack services
   contctrl stop     Stop compose services
-  contctrl restart  Restart a specific service
+  contctrl restart  Restart a specific stack
   contctrl pull     Pull and restart a specific service`)
 }

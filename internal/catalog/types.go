@@ -57,6 +57,11 @@ func (p *Project) PullStack() error {
 	return err
 }
 
+func (p *Project) RestartStack() error {
+	err := runner.RestartStack(p.SelectedFile.AbsPath, p.SelectedStack.Services)
+	return err
+}
+
 // For debugging and logging only
 func (p *Project) Describe() {
 	fmt.Printf("Project Name: %s\n", p.Name)
