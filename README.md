@@ -23,7 +23,7 @@ When you have dozens of Compose projects spread across a directory tree, jumping
 
 **Requirements**
 
-- Go 1.21+
+- Go 1.26+
 - Docker with Compose plugin
 
 ```sh
@@ -58,13 +58,22 @@ Example layout:
 contctrl run      # fuzzy select project > file > stack, then bring up services
 contctrl stop     # fuzzy select project > file, then stop all services
 contctrl pull     # fuzzy select project > file > stack, pull images and restart
+contctrl restart  # fuzzy select project > stack, pull images
+contctrl edit     # fuzzy select project > file > edit compose file
+contctrl config   # edit contctrl.yml file
 ```
 
 All selection steps are interactive via fuzzy finder. If a project has only one Compose file, it is used automatically.
 
 ## Configuration
 
-Set the base directory by editing the `BASE_DIR` constant in `main.go`, or contribute a config file implementation (see [CONTRIBUTING](CONTRIBUTING.md)).
+configuration file is located at `~/.config/contctrl.yml`. File is created automatically if doesn't exit on first run.
+
+To edit config file:
+
+```sh
+contctrl config
+```
 
 ## Dependencies
 

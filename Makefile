@@ -1,5 +1,5 @@
 BINARY := contctrl
-INSTALL_DIR := /home/hany/dotfiles/.bin/dev
+INSTALL_DIR := /usr/local/bin/
 
 .PHONY: build install
 
