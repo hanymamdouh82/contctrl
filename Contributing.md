@@ -6,7 +6,8 @@ Thanks for your interest in contributing. This is a focused tool with a simple s
 
 - Bug fixes
 - New CLI commands (`restart`, `logs`, etc.)
-- Config file support for `BASE_DIR` and other settings
+- Initialize a project
+- Config file support for other settings
 - Improvements to fuzzy selection flow
 - Better error handling and messaging
 - Documentation improvements

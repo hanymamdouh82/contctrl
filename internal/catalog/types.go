@@ -3,6 +3,7 @@ package catalog
 import (
 	"encoding/json"
 	"fmt"
+	"path"
 
 	"github.com/hanymamdouh82/contctrl/internal/metadata"
 	"github.com/hanymamdouh82/contctrl/internal/parser"
@@ -64,6 +65,11 @@ func (p *Project) RestartStack() error {
 
 func (p *Project) Edit() error {
 	err := runner.Edit(p.SelectedFile.AbsPath)
+	return err
+}
+
+func (p *Project) EditMeta() error {
+	err := runner.Edit(path.Join(p.BaseDir, METADATA))
 	return err
 }
 

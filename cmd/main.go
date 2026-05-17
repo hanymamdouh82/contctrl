@@ -45,6 +45,9 @@ func main() {
 		editCompose(prj)
 	case "config":
 		editConfig(&c)
+	case "meta":
+		prj := prepProject(ps)
+		editMeta(prj)
 	default:
 		usage()
 		os.Exit(1)
@@ -134,6 +137,13 @@ func editConfig(c *config.Config) {
 	}
 }
 
+// Command: meta
+func editMeta(prj *catalog.Project) {
+	if err := prj.EditMeta(); err != nil {
+		log.Fatal(err)
+	}
+}
+
 // Prints CLI usage commands and verbs
 func usage() {
 	fmt.Println(`contctrl - Containerization Control Plane
@@ -144,5 +154,6 @@ Usage:
   contctrl restart  Restart a specific stack
   contctrl pull     Pull and restart a specific service
   contctrl edit     Edit a project compose file
+  contctrl meta     Edit a project metadata file
   contctrl config   Edit contctrl config file`)
 }

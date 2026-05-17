@@ -60,6 +60,7 @@ contctrl stop     # fuzzy select project > file, then stop all services
 contctrl pull     # fuzzy select project > file > stack, pull images and restart
 contctrl restart  # fuzzy select project > stack, pull images
 contctrl edit     # fuzzy select project > file > edit compose file
+contctrl meta     # fuzzy select project > edit metadata file
 contctrl config   # edit contctrl.yml file
 ```
 
